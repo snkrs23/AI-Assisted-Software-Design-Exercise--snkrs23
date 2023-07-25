@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 interface CoefficientParser {
     double parse(String coefficient);
 }
+
 //A CoefficientParser implementation for parsing integer coefficients.
 class IntegerCoefficientParser implements CoefficientParser {
     @Override
@@ -13,6 +14,7 @@ class IntegerCoefficientParser implements CoefficientParser {
         return Integer.parseInt(coefficient);
     }
 }
+
 //A CoefficientParser implementation for parsing fraction coefficients.
 class FractionCoefficientParser implements CoefficientParser {
     @Override
@@ -23,6 +25,7 @@ class FractionCoefficientParser implements CoefficientParser {
         return (double) numerator / denominator;
     }
 }
+
 //A CoefficientParser implementation for parsing decimal coefficients.
 class DecimalCoefficientParser implements CoefficientParser {
     @Override
@@ -30,6 +33,7 @@ class DecimalCoefficientParser implements CoefficientParser {
         return Double.parseDouble(coefficient);
     }
 }
+
 //A simple polynomial derivative calculator that calculates the nth order derivative of a polynomial.
 public class Derivative {
     private static final Pattern termPattern = Pattern.compile("(-?\\d+(\\.\\d+)?/?\\d*(\\.\\d+)?)?x(\\^(-?\\d+(\\.\\d+)?))?");
@@ -46,12 +50,16 @@ public class Derivative {
         System.out.print("Enter the order of the derivative: ");
         int order = scanner.nextInt();
 
-        String result = calculateDerivative(expression, order);
-
-        System.out.println("The " + order + "-th order derivative of the polynomial is: " + result);
+        try {
+            String result = calculateDerivative(expression, order);
+            System.out.println("The " + order + "-th order derivative of the polynomial is: " + result);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid polynomial expression. Please enter a valid expression.");
+        }
 
         scanner.close();
     }
+
     /**
      * Calculates the nth order derivative of a given polynomial expression.
      *
@@ -65,6 +73,7 @@ public class Derivative {
         }
         return expression;
     }
+
     /**
      * Calculates the derivative of a single term in the polynomial expression.
      *
@@ -117,17 +126,10 @@ public class Derivative {
             return 1.0;
         }
 
-        CoefficientParser parser;
-        if (coefficient.contains("/")) {
-            parser = new FractionCoefficientParser();
-        } else if (coefficient.contains(".")) {
-            parser = new DecimalCoefficientParser();
-        } else {
-            parser = new IntegerCoefficientParser();
-        }
-
+        CoefficientParser parser = CoefficientParserFactory.createParser(coefficient);
         return parser.parse(coefficient);
     }
+
     /**
      * Parses the exponent value from a string representation.
      *
@@ -140,5 +142,18 @@ public class Derivative {
         }
 
         return Double.parseDouble(exponent);
+    }
+}
+
+// Add a factory class to create parsers based on the coefficient type
+class CoefficientParserFactory {
+    public static CoefficientParser createParser(String coefficient) {
+        if (coefficient.contains("/")) {
+            return new FractionCoefficientParser();
+        } else if (coefficient.contains(".")) {
+            return new DecimalCoefficientParser();
+        } else {
+            return new IntegerCoefficientParser();
+        }
     }
 }
