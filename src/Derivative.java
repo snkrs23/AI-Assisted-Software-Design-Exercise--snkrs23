@@ -142,10 +142,3 @@ public class Derivative {
         return Double.parseDouble(exponent);
     }
 }
-
-
-
-
-
-
-

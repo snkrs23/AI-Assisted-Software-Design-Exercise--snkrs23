@@ -26,16 +26,3 @@ class DerivativeTest {
         assertEquals("4x^3 + 2x^2 + x + 3", result5);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
