@@ -1,1 +1,1 @@
-# AI-Assisted-Software-Design-Exercise--snkrs23
+The polynomial derivative calculator
